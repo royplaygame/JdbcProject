@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import org.junit.Test;
 
+import com.hy.ly.entity.LoginLog;
 import com.hy.ly.entity.Person;
 import com.hy.ly.utils.DBUtils;
 
@@ -25,7 +26,7 @@ public class JDBCTest {
 			// 创建Statement对象
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, "lvbu");
-			//pst.setString(1, "lvbu' or 1=1 or 2='2");
+			// pst.setString(1, "lvbu' or 1=1 or 2='2");
 			pst.setString(2, "123456");
 			// 执行插入sql语句
 			rs = pst.executeQuery();
@@ -54,12 +55,16 @@ public class JDBCTest {
 		System.out.println(sql);
 		// 查询当前帐号
 		boolean flag = DBUtils.getResult(sql);
-		System.out.println(flag);
+		if (flag) {
+			System.out.println("登录成功！");
+		} else {
+			System.out.println("登录失败！");
+		}
 	}
 
 	private Person loginPerson() {
 		Person p = new Person();
-		p.setName("lvbu' or 1=1 or 2='2");
+		p.setName("lvbu21' or 1=1 or 2='2");
 		p.setPassword("21231313");
 		return p;
 	}
@@ -87,6 +92,7 @@ public class JDBCTest {
 		Person p = getPersonFromConsole();
 		addNewPerson(p);
 	}
+
 	@Test
 	public void testAddNewPersonPrepared() {
 		Person p = getPersonFromConsole();
@@ -110,12 +116,25 @@ public class JDBCTest {
 		System.out.println(sql);
 		DBUtils.update(sql);
 	}
-	
+
 	public void addNewPersonPrepared(Person p) {
 		String sql = "INSERT INTO person(name,password) VALUES(?,?)";
 		System.out.println(sql);
-		DBUtils.update(sql,p.getName(),p.getPassword());
+		DBUtils.update(sql, p.getName(), p.getPassword());
 	}
 
-	
+	// 测试通用查询方法
+	@Test
+	public void testDBUitlQuery() {
+		String sql = "select id,name,password from person where id=?";
+		System.out.println(sql);
+		Person p=DBUtils.getObject(Person.class, sql, 5);
+		System.out.println(p);
+		
+		
+		String sql1 = "SELECT log_id logId,user_id userId,ip,login_time loginTime from loginlog where log_id=?";
+		System.out.println(sql1);
+		LoginLog log=DBUtils.getObject(LoginLog.class, sql1, 3);
+		System.out.println(log);
+	}
 }
