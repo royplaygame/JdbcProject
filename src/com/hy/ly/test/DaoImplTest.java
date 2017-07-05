@@ -2,8 +2,6 @@ package com.hy.ly.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.fail;
-
 import java.util.List;
 
 import org.junit.Test;
