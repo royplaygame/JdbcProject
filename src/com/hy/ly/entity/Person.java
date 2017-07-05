@@ -1,9 +1,20 @@
 package com.hy.ly.entity;
 
+import java.sql.Blob;
+
 public class Person {
 	private Integer id;
 	private String name;
 	private String password;
+	private Blob pic;
+	
+	public Blob getPic() {
+		return pic;
+	}
+
+	public void setPic(Blob pic) {
+		this.pic = pic;
+	}
 
 	public String getPassword() {
 		return password;
