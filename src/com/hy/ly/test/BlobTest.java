@@ -18,7 +18,6 @@ import org.junit.Test;
 
 import com.hy.ly.dao.Dao;
 import com.hy.ly.dao.DaoImpl;
-import com.hy.ly.entity.Person;
 import com.hy.ly.utils.DBUtils;
 
 public class BlobTest {
