@@ -15,6 +15,38 @@ import java.util.Properties;
 import org.apache.commons.beanutils.BeanUtils;
 
 public class DBUtils {
+	// 处理交事务提
+	public static void commit(Connection conn) {
+		if (conn != null) {
+			try {
+				conn.commit();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	// 处理交事回滚
+	public static void rollback(Connection conn) {
+		if (conn != null) {
+			try {
+				conn.rollback();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	// 处理交事开始
+	public static void beginTx(Connection conn) {
+		if (conn != null) {
+			try {
+				conn.setAutoCommit(false);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	
 
 	// 获取连接
 	public static Connection getConnection() {
@@ -180,12 +212,12 @@ public class DBUtils {
 	}
 
 	// 查询方法
-	public static <T> T getObject(Class<T> clazz,String sql, Object... args) {
+	public static <T> T getObject(Class<T> clazz, String sql, Object... args) {
 		T entity = null;
 		Connection conn = null;
 		PreparedStatement pst = null;
 		ResultSet rs = null;
-		ResultSetMetaData rsmd=null;
+		ResultSetMetaData rsmd = null;
 		try {
 			// 获取连接
 			conn = DBUtils.getConnection();
@@ -200,41 +232,41 @@ public class DBUtils {
 			// 处理Resultset结果集
 			if (rs.next()) {
 				/**
-				 * 1. 先利用结果进行查询得到结果集
-				 * 2. 利用反射创建实体对象
-				 * 3. 获取结果集的别名
-				 * 4. 再获取结果集的值，结合3得到一个Map,键是列的别名，值是列的值，
-				 * 5. 再利用反射为2的实体对象赋值，属性为Map的key,值为Map的值.
+				 * 1. 先利用结果进行查询得到结果集 2. 利用反射创建实体对象 3. 获取结果集的别名 4.
+				 * 再获取结果集的值，结合3得到一个Map,键是列的别名，值是列的值， 5.
+				 * 再利用反射为2的实体对象赋值，属性为Map的key,值为Map的值.
 				 *
 				 */
-				//反射创建对象
-				entity=clazz.newInstance();
-				
-				//通过解析sql来判断查询了那些列,再给这些列赋值
-				rsmd=rs.getMetaData();
-				
-				//再获取结果集的值,封装到Map
-				int count=rsmd.getColumnCount();
-				Map<String,Object> map=new HashMap<String,Object>();
-				for(int i=0;i<count;i++){
-					String columnLabel=rsmd.getColumnLabel(i+1);
-					Object value=rs.getObject(columnLabel);
-					map.put(columnLabel,value);
+				// 反射创建对象
+				entity = clazz.newInstance();
+
+				// 通过解析sql来判断查询了那些列,再给这些列赋值
+				rsmd = rs.getMetaData();
+
+				// 再获取结果集的值,封装到Map
+				int count = rsmd.getColumnCount();
+				Map<String, Object> map = new HashMap<String, Object>();
+				for (int i = 0; i < count; i++) {
+					String columnLabel = rsmd.getColumnLabel(i + 1);
+					Object value = rs.getObject(columnLabel);
+					map.put(columnLabel, value);
 				}
-				//创建一个对象
-				entity=clazz.newInstance();
-				
-				//利用反射，再把map中的值赋值给实体对象
-				for(Map.Entry<String, Object> entry:map.entrySet()){
+				// 创建一个对象
+				entity = clazz.newInstance();
+
+				// 利用反射，再把map中的值赋值给实体对象
+				for (Map.Entry<String, Object> entry : map.entrySet()) {
 					String fieldName = entry.getKey();
 					Object fieldValue = entry.getValue();
-					//需要用到commons-beanutils-1.9.2.jar、commons-logging-1.2.jar、commons-collections-3.2.jar
+					// 需要用到commons-beanutils-1.9.2.jar、commons-logging-1.2.jar、commons-collections-3.2.jar
 					BeanUtils.setProperty(entity, fieldName, fieldValue);
-					
-					//通过spring的ReflectionUtils来给属性赋值spring-core-4.3.3.RELEASE.jar
-					/*Field field=ReflectionUtils.findField(clazz, fieldName);
-					ReflectionUtils.makeAccessible(field);
-					ReflectionUtils.setField(field, entity, fieldValue);*/
+
+					// 通过spring的ReflectionUtils来给属性赋值spring-core-4.3.3.RELEASE.jar
+					/*
+					 * Field field=ReflectionUtils.findField(clazz, fieldName);
+					 * ReflectionUtils.makeAccessible(field);
+					 * ReflectionUtils.setField(field, entity, fieldValue);
+					 */
 				}
 			}
 		} catch (Exception ex) {
