@@ -12,7 +12,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.sql.DataSource;
+
 import org.apache.commons.beanutils.BeanUtils;
+
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 public class DBUtils {
 	// 处理交事务提
@@ -25,6 +29,7 @@ public class DBUtils {
 			}
 		}
 	}
+
 	// 处理交事回滚
 	public static void rollback(Connection conn) {
 		if (conn != null) {
@@ -35,6 +40,7 @@ public class DBUtils {
 			}
 		}
 	}
+
 	// 处理交事开始
 	public static void beginTx(Connection conn) {
 		if (conn != null) {
@@ -45,11 +51,25 @@ public class DBUtils {
 			}
 		}
 	}
-	
-	
+
+	private static DataSource dataSource = null;
+
+	static {
+		dataSource = new ComboPooledDataSource("helloc3p0");
+	}
 
 	// 获取连接
 	public static Connection getConnection() {
+		try {
+			return dataSource.getConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	// 获取连接
+	public static Connection getConnection1() {
 		// 读取类路径下的jdbc.properties文件
 		Properties properties = new Properties();
 		try {

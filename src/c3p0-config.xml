@@ -1,0 +1,18 @@
+<c3p0-config>
+
+	<named-config name="helloc3p0">
+		<!-- 数据库的必须信息 -->
+		<property name="jdbcUrl">jdbc:mysql://10.2.2.28:3306/test</property>
+		<property name="driverClass">com.mysql.jdbc.Driver</property>
+		<property name="user">root</property>
+		<property name="password">root</property>
+
+		<!-- 数据库的其它信息 -->
+		<property name="acquireIncrement">5</property>
+		<property name="initialPoolSize">5</property>
+		<property name="minPoolSize">5</property>
+		<property name="maxPoolSize">100</property>
+		<property name="maxStatements">20</property>
+		<property name="maxStatementsPerConnection">5</property>
+	</named-config>
+</c3p0-config>
