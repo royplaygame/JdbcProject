@@ -2,10 +2,10 @@
 
 	<named-config name="helloc3p0">
 		<!-- 数据库的必须信息 -->
-		<property name="jdbcUrl">jdbc:mysql://10.2.2.28:3306/test</property>
+		<property name="jdbcUrl">jdbc:mysql://192.168.56.102:3306/test</property>
 		<property name="driverClass">com.mysql.jdbc.Driver</property>
 		<property name="user">root</property>
-		<property name="password">root</property>
+		<property name="password">luoyang</property>
 
 		<!-- 数据库的其它信息 -->
 		<property name="acquireIncrement">5</property>

@@ -8,7 +8,9 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -231,7 +233,7 @@ public class DBUtils {
 		return flag;
 	}
 
-	// 查询方法
+	// 查询方法，获取一个对象
 	public static <T> T getObject(Class<T> clazz, String sql, Object... args) {
 		T entity = null;
 		Connection conn = null;
@@ -295,5 +297,51 @@ public class DBUtils {
 			DBUtils.release(rs, pst, conn);
 		}
 		return entity;
+	}
+
+	// 获取一个对象列表
+	public static <T> List<T> getObjectList(Class<T> clazz, String sql, Object... args) {
+		T entity = null;
+		Connection conn = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		ResultSetMetaData rsmd = null;
+		List<T> list = new ArrayList<>();
+		try {
+			conn = DBUtils.getConnection();
+			pst = conn.prepareStatement(sql);
+			for (int i = 0; i < args.length; i++) {
+				pst.setObject(i + 1, args[i]);
+			}
+			rs = pst.executeQuery();
+			while (rs.next()) {
+				entity = clazz.newInstance();
+				rsmd = rs.getMetaData();
+				int colCount = rsmd.getColumnCount();
+				// 获取的一条记录放入map
+				Map<String, Object> map = new HashMap<>();
+				for (int i = 0; i < colCount; i++) {
+					String colName = rsmd.getColumnLabel(i + 1);
+					Object value = rs.getObject(colCount);
+					map.put(colName, value);
+				}
+
+				// 同过反射把属性赋值给对象
+				for (Map.Entry<String, Object> entry : map.entrySet()) {
+					String fieldName = entry.getKey();
+					Object fieldValue = entry.getValue();
+
+					// 通过BenUtils
+					BeanUtils.setProperty(entity, fieldName, fieldValue);
+				}
+				list.add(entity);
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			DBUtils.release(rs, pst, conn);
+		}
+		return list;
 	}
 }
