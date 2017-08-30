@@ -92,17 +92,16 @@ public class TransactionTest {
 	@Test
 	public void testTransactionOk() {
 		Connection conn = null;
-		PreparedStatement pst = null;
-
 		try {
-			conn = DBUtils.getConnection();
+			conn = DBUtils.getConnection1();
+			//conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 			// 开始事务
 			conn.setAutoCommit(false);
 			String sql = "update person set balance=balance-500 where id=11";
 			update(conn, sql);
 			// 在这个地方出现异常
-			int k = 10 / 0;
-			System.out.println(k);
+			//int k = 10 / 0;
+			//System.out.println(k);
 			sql = "update person set balance=balance+500 where id=9";
 			update(conn, sql);
 			// 提交事务
@@ -116,7 +115,7 @@ public class TransactionTest {
 				e1.printStackTrace();
 			}
 		} finally {
-			DBUtils.release(null, pst, conn);
+			DBUtils.release(null, null, conn);
 		}
 	}
 

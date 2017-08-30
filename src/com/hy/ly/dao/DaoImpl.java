@@ -20,7 +20,7 @@ public class DaoImpl implements Dao {
 	@Override
 	public int update(String sql, Object... args) {
 		// 获取连接
-		Connection conn = DBUtils.getConnection();
+		Connection conn = DBUtils.getConnection1();
 		PreparedStatement pst = null;
 		int row = 0;
 		try {
@@ -44,7 +44,7 @@ public class DaoImpl implements Dao {
 	public <T> T get(Class<T> clazz, String sql, Object... args) {
 		T entity = null;
 		// 获取连接
-		Connection conn = DBUtils.getConnection();
+		Connection conn = DBUtils.getConnection1();
 		PreparedStatement pst = null;
 		ResultSet rs = null;
 		ResultSetMetaData rsmd = null;
@@ -101,7 +101,7 @@ public class DaoImpl implements Dao {
 	public <T> List<T> getForList(Class<T> clazz, String sql, Object... args) {
 		T entity = null;
 		// 获取Connection
-		Connection conn = DBUtils.getConnection();
+		Connection conn = DBUtils.getConnection1();
 		PreparedStatement pst = null;
 		ResultSet rs = null;
 		ResultSetMetaData rsmd = null;
@@ -156,7 +156,7 @@ public class DaoImpl implements Dao {
 	@Override
 	public <E> E getForValue(String sql, Object... args) {
 		// 获取连接
-		Connection conn = DBUtils.getConnection();
+		Connection conn = DBUtils.getConnection1();
 		PreparedStatement pst = null;
 		ResultSet rs = null;
 		try {

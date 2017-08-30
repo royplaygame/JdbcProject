@@ -25,7 +25,7 @@ public class TestDBCP {
 	}
 
 	// 使用DBCP连接池
-	// 1. 加入jar包commons-dbcp2-2.1.1.jar，依赖commons-logging-1.2.jar
+	// 1. 加入jar包commons-dbcp2-2.1.1.jar，依赖commons-logging-1.2.jar,commons-pool2-2.3.jar
 	// 2. 创建数据库连接池BasicDataSource
 	// 3。 设置必须的属性
 	// 4. 获取Connection连接

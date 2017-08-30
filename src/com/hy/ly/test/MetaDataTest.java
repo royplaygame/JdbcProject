@@ -29,6 +29,7 @@ public class MetaDataTest {
 			for(int i=0;i<rsmd.getColumnCount();i++){
 				System.out.println(rsmd.getColumnLabel(i+1));
 				System.out.println(rsmd.getColumnName(i+1));
+				System.out.println(rsmd.getColumnType(i+1));
 			}
 			//获取列个数
 			System.out.println(rsmd.getColumnCount());
